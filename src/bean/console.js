@@ -2,14 +2,14 @@
  * Console log
  **/
 
-define( function () {
+define( function() {
 
   if ( window.console ) {
     return window.console;
   }
 
   var method,
-    noop = function () {},
+    noop = function() {},
     methods = [
       "assert", "clear", "count", "debug", "dir", "dirxml", "error",
       "exception", "group", "groupCollapsed", "groupEnd", "info", "log",
@@ -17,7 +17,7 @@ define( function () {
       "timeline", "timelineEnd", "timeStamp", "trace", "warn"
     ];
   var length = methods.length;
-  var console = (window.console = window.console || {});
+  var console = ( window.console = window.console || {} );
 
   while ( length-- ) {
     method = methods[ length ];

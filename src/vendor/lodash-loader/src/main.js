@@ -91,6 +91,8 @@ define(['module'], function(module) {
       "union": "union",
       "uniq": "uniq",
       "unique": "unique",
+      "uniqBy": "uniqBy",
+      "uniqWith": "uniqWith",
       "unzip": "unzip",
       "unzipWith": "unzipWith",
       "without": "without",

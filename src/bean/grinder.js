@@ -2,15 +2,15 @@
  * Console log
  **/
 
-define( function () {
+define( function() {
 
-  return function ( attr ) {
-    var parameters = attr.split( "@" );
+  return function( elm ) {
+    var parameters = elm.getAttribute( "data-coffeepot" ).split( "@" );
 
     return {
-      command : parameters.shift(),
+      command: parameters.shift(),
       selector: parameters.shift(),
-      options : parameters
+      options: parameters
     };
   };
 

@@ -2,10 +2,15 @@
  * Console log
  **/
 
-define( ["bean/console"], function ( console ) {
+define( [ "bean/console", "_!map" ], function( console, _ ) {
 
-  console.log( "ok!!! I HAVE LOADED ");
+	"use strict";
 
-  return function () {};
+	var selector = "[data-coffeepot^=americano]",
+		coffees = document.querySelectorAll( selector );
+
+	_.map( coffees, function( elm ) {
+		console.log( "seeing this americano " + elm.textContent );
+	} );
 
 } );

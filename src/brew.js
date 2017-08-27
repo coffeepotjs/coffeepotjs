@@ -6,44 +6,67 @@
 
 //CONFIGURATION
 requirejs.config( {
-  urlArgs   : "nocache=" + (new Date).getTime(),
-  googlemaps: {
-    url   : "https://maps.googleapis.com/maps/api/js",
-    params: {
-      libraries: "geometry,places",
-      v        : "3.exp"
-    }
-  },
-  paths     : {
-    cookie : "vendor/js-cookie/src/js.cookie",
-    _      : "vendor/lodash-loader/src/main",
-    plugins: "vendor/requirejs-plugins/src"
-  },
-  packages  : [
-    {
-      name    : "lodash",
-      location: "vendor/lodash"
-    }
-  ]
+    googlemaps: {
+        url: "https://maps.googleapis.com/maps/api/js",
+        params: {
+            libraries: "geometry,places",
+            v: "3.exp"
+        }
+    },
+
+	shim: {
+		"morris": {
+			"deps": [ "jquery", "raphael", "text!vendor/morris/morris.css" ],
+			exports: "Morris",
+			init: function( $, Raphael ) {
+				window.Raphael = Raphael;
+			}
+		}
+	},
+
+    paths: {
+        "cookie": "vendor/js-cookie/src/js.cookie",
+        "_": "vendor/lodash-loader/src/main",
+        "plugins": "vendor/requirejs-plugins/src",
+		"jquery": "vendor/jquery/jquery",
+		"morris": "vendor/morris/morris",
+		"raphael": "vendor/raphael/raphael.min"
+    },
+
+    config: {
+        _: { devOptimizedLoad: true }
+    },
+
+    loaded: {},
+
+    packages: [
+        {
+            name: "lodash",
+            location: "vendor/lodash"
+        }
+    ]
 } );
 
-require( [ "domReady", "bean/console", "bean/grinder" ],
-  function ( domReady, console, grinder ) {
+require( [ "jquery", "bean/grinder", "_!map" ],
+    function( $, grinder, _ ) {
 
-    var reciepes = document.querySelectorAll( "[data-coffeepot]" ),
-      seen = {},
-      indx;
+		"use strict";
 
-    for ( indx = 0; indx < reciepes.length; ++indx ) {
+		$( function() {
+		_.map( document.querySelectorAll( "[data-coffeepot]" ),
+				function( elm ) {
 
-      var action = grinder( reciepes[indx].getAttribute( "data-coffeepot" ) );
+					var action = grinder( elm );
+					if ( requirejs.s.contexts._.config.loaded.hasOwnProperty( action.command ) ) {
+						return true;
+					}
 
-      if ( seen.hasOwnProperty( action.command ) ) {
-        return;
-      }
+					// Lets add this index
+					requirejs.s.contexts._.config.loaded[ action.command ] = true;
 
-      require( [ "drink/" + action.command + "/serve" ] );
-    }
+					return require( [ "drink/" + action.command + "/serve" ] );
 
-  } );
+				} );
+		} );
 
+    } );
