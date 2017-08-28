@@ -4,19 +4,27 @@
 
 define( [ "jquery" ], function( $ ) {
 
+	"use strict";
+
+	var seed = 1;
+
 	return {
+
+		getId: function( prefix ) {
+
+			return ( prefix ) ? prefix + "_" + seed++ : "cpid_" + seed++;
+		},
 
 		capitalizeFirstLetter: function( string ) {
 			return string.charAt( 0 ).toUpperCase() + string.slice( 1 );
 		},
 
-		parseCommand: function( elm ) {
+		parseCommand: function( $elm ) {
 
-			var $elm = $( $elm ),
-				params = $elm.data( "coffeepot" ).split( "@" ),
+			var params = $elm.prop( "data-coffeepot" ).split( "@" ),
 				command = params[ 0 ],
 				selector = params[ 1 ],
-				options = ( $elm.attr( "data-coffeepot-parameters" ) ) ? $elm.data( "coffeepot-parameters" ) : false;
+				options = ( $elm.attr( "data-coffeepot-parameters" ) ) ? $elm.data().coffeeParameters : false;
 
 			return {
 				command: command,
