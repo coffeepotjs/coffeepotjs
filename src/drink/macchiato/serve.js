@@ -2,23 +2,24 @@
  * Console log
  **/
 
-define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
+define( [ "jquery", "bean/utils", "morris" ], function( $, Util, Morris ) {
 
 	"use strict";
 
 	var selector = "[data-coffeepot^=macchiato]",
-		coffees = document.querySelectorAll( selector );
+		coffees = $( selector );
 
 	/**
 	 * Init loop to all nodes
 	 * @init
 	 */
 
-	for ( var idx = coffees.length; idx >= 0; idx-- ) {
-		var $elm = $( coffees[ idx ] ),
-			id = utils.getId(),
-			action = utils.parseCommand( $elm ),
-			config = { hideHover: true, resize: true, type: "Line" };
+	for ( var indx = 0; indx < coffees.length; indx++ )
+	{
+		var $elm = coffees.eq( indx ),
+			id = Util.getId(),
+			action = Util.parseCommand( $elm ),
+			config = { hideHover: true, resize: true, type: "Line", axes: true };
 
 		if ( action.options )
 		{
@@ -27,8 +28,6 @@ define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
 
 		var data = [],
 			labels = [];
-
-		// Lets get the labels;
 
 		$elm.find( "tr" ).each( function( index, elm ) {
 
@@ -57,7 +56,9 @@ define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
 					return true;
 				}
 
-				series = ( series === "-" ) ? "a" : String.fromCharCode( series .charCodeAt() + 1 );
+				series = ( series === "-" ) ?
+					"a"
+					: String.fromCharCode( series.charCodeAt() + 1 );
 				dataset[ series ] = $node.text();
 			} );
 
@@ -73,8 +74,8 @@ define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
 				// ID of the element in which to draw the chart.
 				element: id,
 
-				// Chart data records -- each entry in this array corresponds to a point on
-				// the chart.
+				// Chart data records -- each entry in this array corresponds
+                // to a point on the chart.
 				data: data.map( function( obj ) {
 					return {
 						label: obj[ Object.keys( obj )[ 0 ] ],
@@ -87,18 +88,19 @@ define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
 		}
 
 		$elm.wrap( "<figure><figcaption></figcaption></figure>" );
-		$elm.parent().before( "<div class=\"cp-chart\" id=\"" +  id + "\"></div>" );
+		$elm.parent().before( "<div class=\"cp-chart\" id=\"" + id + "\"></div>" );
 		$elm.wrap( "<details></details>" );
 		$elm.before( "<summary>" + $elm.find( "caption" ).text() + "</summary>" );
 
+		$elm.addClass( "cp-init" );
 		// Call Morris
 		return new Morris[ config.type ]( {
 
 			// ID of the element in which to draw the chart.
 			element: id,
 
-			// Chart data records -- each entry in this array corresponds to a point on
-			// the chart.
+			// Chart data records -- each entry in this array corresponds to a
+            // point on the chart.
 			data: data,
 
 			// The name of the data record attribute that contains x-values.
@@ -111,11 +113,11 @@ define( [ "jquery", "bean/utils", "morris" ], function( $, utils,  Morris ) {
 			// chart.
 			labels: labels,
 
-			axes: axes,
+			axes: config.axes,
 
 			hideHover: true
 		} );
 
-	};
+	}
 
 } );

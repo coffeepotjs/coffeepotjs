@@ -6,13 +6,13 @@
 
 //CONFIGURATION
 requirejs.config( {
-    googlemaps: {
-        url: "https://maps.googleapis.com/maps/api/js",
-        params: {
-            libraries: "geometry,places",
-            v: "3.exp"
-        }
-    },
+	googlemaps: {
+		url: "https://maps.googleapis.com/maps/api/js",
+		params: {
+			libraries: "geometry,places",
+			v: "3.exp"
+		}
+	},
 
 	shim: {
 		"morris": {
@@ -24,49 +24,58 @@ requirejs.config( {
 		}
 	},
 
-    paths: {
-        "cookie": "vendor/js-cookie/src/js.cookie",
-        "_": "vendor/lodash-loader/src/main",
-        "plugins": "vendor/requirejs-plugins/src",
+	paths: {
+		"cookie": "vendor/js-cookie/src/js.cookie",
+		"_": "vendor/lodash-loader/src/main",
+		"plugins": "vendor/requirejs-plugins/src",
 		"jquery": "vendor/jquery/jquery",
 		"morris": "vendor/morris/morris",
 		"raphael": "vendor/raphael/raphael.min"
-    },
+	},
 
-    config: {
-        _: { devOptimizedLoad: true }
-    },
+	config: {
+		_: { devOptimizedLoad: true }
+	},
 
-    loaded: {},
+	loaded: {},
 
-    packages: [
-        {
-            name: "lodash",
-            location: "vendor/lodash"
-        }
-    ]
+	packages: [
+		{
+			name: "lodash",
+			location: "vendor/lodash"
+		}
+	]
 } );
 
-require( [ "jquery", "bean/grinder", "_!map" ],
-    function( $, grinder, _ ) {
+require( [ "jquery", "bean/utils" ], function( $, Util ) {
+	"use strict";
 
-		"use strict";
+	// Remove no-js header
+	$( ":root" ).removeAttr( "class" );
 
-		$( function() {
-		_.map( document.querySelectorAll( "[data-coffeepot]" ),
-				function( elm ) {
+	$( function() {
+		var elements = $( "[data-coffeepot]" );
 
-					var action = grinder( elm );
-					if ( requirejs.s.contexts._.config.loaded.hasOwnProperty( action.command ) ) {
-						return true;
-					}
+		for ( var indx = 0; indx < elements.length; indx++ )
+		{
 
-					// Lets add this index
-					requirejs.s.contexts._.config.loaded[ action.command ] = true;
+			var action = Util.parseCommand( elements.eq( indx ) );
 
-					return require( [ "drink/" + action.command + "/serve" ] );
+			if ( requirejs.s.contexts._.config.loaded.hasOwnProperty( action.command ) )
+			{
+				console.log( "skipping seen :: " + action.command );
+				continue;
+			}
 
-				} );
-		} );
+			// Lets add this index
+			requirejs.s.contexts._.config.loaded[ action.command ] = true;
 
-    } );
+			console.log( "drink/" + action.command + "/serve" );
+
+			require( [ "drink/" + action.command + "/serve" ] );
+		}
+
+	} );
+
+
+} );

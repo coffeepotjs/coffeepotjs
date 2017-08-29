@@ -21,7 +21,7 @@ define( [ "jquery" ], function( $ ) {
 
 		parseCommand: function( $elm ) {
 
-			var params = $elm.prop( "data-coffeepot" ).split( "@" ),
+			var params = $elm.attr( "data-coffeepot" ).split( "@" ),
 				command = params[ 0 ],
 				selector = params[ 1 ],
 				options = ( $elm.attr( "data-coffeepot-parameters" ) ) ? $elm.data().coffeeParameters : false;
@@ -32,6 +32,9 @@ define( [ "jquery" ], function( $ ) {
 				options: options
 			};
 		}
+
+
+
 	};
 } );
 

@@ -1,0 +1,9 @@
+[data-coffeepot]
+{
+	visibility: hidden;
+}
+
+[data-coffeepot].cp-init
+{
+	visibility: inherit;
+}

@@ -2,15 +2,22 @@
  * Console log
  **/
 
-define( [ "bean/console", "_!map" ], function( console, _ ) {
+define( [ "jquery", "bean/utils" ], function( $, Util ) {
 
 	"use strict";
 
 	var selector = "[data-coffeepot^=americano]",
-		coffees = document.querySelectorAll( selector );
+		coffees = $( selector );
 
-	_.map( coffees, function( elm ) {
-		console.log( "seeing this americano " + elm.textContent );
-	} );
+	for ( var indx = 0; indx < coffees.length; indx++ )
+	{
+
+		var $elm = coffees.eq( indx ),
+			action = Util.parseCommand(  $elm );
+
+		console.log( "seeing this americano " + $elm.text() );
+
+		$elm.addClass( "cp-init" );
+	}
 
 } );
